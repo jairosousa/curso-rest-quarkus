@@ -1,5 +1,7 @@
 package io.github.jairosousa.quarkussocial.rest.dto;
 
+import lombok.Data;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -7,6 +9,8 @@ import javax.validation.constraints.NotNull;
  * @Autor Jairo Nascimento
  * @Created 12/11/2021 - 09:19
  */
+
+@Data
 public class CreateUserRequest {
 
     @NotBlank(message = "Name is required")
@@ -15,19 +19,4 @@ public class CreateUserRequest {
     @NotNull(message = "Age is required")
     private Integer age;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
 }

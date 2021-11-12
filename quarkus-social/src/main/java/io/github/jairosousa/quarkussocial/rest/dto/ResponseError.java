@@ -1,5 +1,7 @@
 package io.github.jairosousa.quarkussocial.rest.dto;
 
+import lombok.Data;
+
 import javax.validation.ConstraintViolation;
 import javax.ws.rs.core.Response;
 import java.util.Collection;
@@ -11,6 +13,7 @@ import java.util.stream.Collectors;
  * @Autor Jairo Nascimento
  * @Created 12/11/2021 - 17:24
  */
+@Data
 public class ResponseError {
     public static final int UNPROCESSABLE_ENTITY_STATUS = 422;
 
@@ -29,22 +32,6 @@ public class ResponseError {
                 .collect(Collectors.toList());
         String message = "Validation Error";
         return new ResponseError(message, errors);
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Collection<FieldError> getErrors() {
-        return errors;
-    }
-
-    public void setErrors(Collection<FieldError> errors) {
-        this.errors = errors;
     }
 
     public Response withStatusCode(int code) {
