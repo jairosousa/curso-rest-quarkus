@@ -1,9 +1,11 @@
 package io.github.jairosousa.quarkussocial.rest;
 
-import io.github.jairosousa.quarkussocial.dpmain.model.User;
+import io.github.jairosousa.quarkussocial.domain.model.User;
+import io.github.jairosousa.quarkussocial.domain.repository.UserRepository;
 import io.github.jairosousa.quarkussocial.rest.dto.CreateUserRequest;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -18,6 +20,13 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 
+    private UserRepository userRepository;
+
+    @Inject
+    public UserResource(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @POST
     @Transactional
     public Response createUser(CreateUserRequest userRequest) {
@@ -25,13 +34,13 @@ public class UserResource {
         user.setAge(userRequest.getAge());
         user.setName(userRequest.getName());
 
-        user.persist();
+        userRepository.persist(user);
         return Response.ok(user).build();
     }
 
     @GET
     public Response getAll() {
-        PanacheQuery<User> query = User.findAll();
+        PanacheQuery<User> query = userRepository.findAll();
         return Response.ok(query.list()).build();
     }
 
@@ -39,9 +48,9 @@ public class UserResource {
     @Transactional
     @Path("{id}")
     public Response deleteUser(@PathParam("id") Long id) {
-        User user = User.findById(id);
+        User user = userRepository.findById(id);
         if (user != null) {
-            user.delete();
+            userRepository.delete(user);
             return Response.ok().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
@@ -51,11 +60,10 @@ public class UserResource {
     @Transactional
     @Path("{id}")
     public Response updateUser(@PathParam("id") Long id, CreateUserRequest userData) {
-        User user = User.findById(id);
+        User user = userRepository.findById(id);
         if (user != null) {
             user.setName(userData.getName());
             user.setAge(userData.getAge());
-            user.persist();
             return Response.ok(user).build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
