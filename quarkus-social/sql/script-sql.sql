@@ -5,3 +5,5 @@ create table users (
 	name varchar(100) not null,
 	age integer not null
 )
+
+select * from users;
