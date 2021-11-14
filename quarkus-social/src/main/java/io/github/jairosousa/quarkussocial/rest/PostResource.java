@@ -5,6 +5,9 @@ import io.github.jairosousa.quarkussocial.domain.model.User;
 import io.github.jairosousa.quarkussocial.domain.repository.PostRepository;
 import io.github.jairosousa.quarkussocial.domain.repository.UserRepository;
 import io.github.jairosousa.quarkussocial.rest.dto.CreatePostRequest;
+import io.github.jairosousa.quarkussocial.rest.dto.PostResponse;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Sort;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -12,6 +15,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Autor Jairo Nascimento
@@ -41,7 +46,6 @@ public class PostResource {
         Post post = new Post();
         post.setText(request.getText());
         post.setUser(user);
-        post.setDataTime(LocalDateTime.now());
 
         postRepository.persist(post);
 
@@ -54,6 +58,14 @@ public class PostResource {
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok().build();
+
+        PanacheQuery<Post> query = postRepository.find("user", Sort.by("dateTime", Sort.Direction.Descending), user);
+        var list = query.list();
+
+        var postResponseList = list.stream()
+                .map(PostResponse::fromEntity)
+                .collect(Collectors.toList());
+
+        return Response.ok(postResponseList).build();
     }
 }

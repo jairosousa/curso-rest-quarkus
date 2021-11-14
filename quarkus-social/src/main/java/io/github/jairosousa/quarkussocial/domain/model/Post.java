@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * @Created 14/11/2021 - 12:41
  */
 @Entity
-@Table(name = "post")
+@Table(name = "posts")
 @Data
 public class Post {
 
@@ -22,9 +22,14 @@ public class Post {
     private String text;
 
     @Column(name = "dateTime")
-    private LocalDateTime dataTime;
+    private LocalDateTime dateTime;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @PrePersist
+    public void prePersist() {
+        setDateTime(LocalDateTime.now());
+    }
 }
