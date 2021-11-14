@@ -17,3 +17,10 @@ CREATE TABLE posts
     dateTime TIMESTAMP,
     user_id BIGINT NOT NULL REFERENCES users(id)
 );
+
+CREATE TABLE followers
+(
+    id bigserial not null primary key,
+    user_id BIGINT NOT NULL REFERENCES users(id),
+    follower_id BIGINT NOT NULL REFERENCES users(id)
+);
