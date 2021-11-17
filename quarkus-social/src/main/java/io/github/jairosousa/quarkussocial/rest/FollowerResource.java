@@ -33,6 +33,10 @@ public class FollowerResource {
     @PUT
     public Response followerUser(@PathParam("userId") Long userId, FollowerRequest request) {
         var user = userRepository.findById(userId);
+        if (userId.equals(request.getFollowerId())) {
+            return Response.status(Response.Status.CONFLICT).entity("You can't follow yourself").build();
+        }
+
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -49,6 +53,6 @@ public class FollowerResource {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
 
-        return Response.ok(follower.getName() + " voçê ja segue o " + user.getName()).build();
+        return Response.status(Response.Status.CONFLICT).entity(follower.getName() + " voçê ja segue o " + user.getName()).build();
     }
 }
