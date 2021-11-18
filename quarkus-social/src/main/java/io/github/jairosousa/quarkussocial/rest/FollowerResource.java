@@ -4,12 +4,16 @@ import io.github.jairosousa.quarkussocial.domain.model.Follower;
 import io.github.jairosousa.quarkussocial.domain.repository.FollowerRepository;
 import io.github.jairosousa.quarkussocial.domain.repository.UserRepository;
 import io.github.jairosousa.quarkussocial.rest.dto.FollowerRequest;
+import io.github.jairosousa.quarkussocial.rest.dto.FollowerResponse;
+import io.github.jairosousa.quarkussocial.rest.dto.FollowersPerUserResponse;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Autor Jairo Nascimento
@@ -55,4 +59,26 @@ public class FollowerResource {
 
         return Response.status(Response.Status.CONFLICT).entity(follower.getName() + " voçê ja segue o " + user.getName()).build();
     }
+
+    @GET
+    public Response listFollowrs(@PathParam("userId") Long userId) {
+        var user = userRepository.findById(userId);
+        if (user == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        var list = followerRepository.findByUser(userId);
+        FollowersPerUserResponse followers = new FollowersPerUserResponse();
+        followers.setFollowersCount(list.size());
+
+        var followerList = list.stream()
+                .map(FollowerResponse::new)
+                .collect(Collectors.toList());
+
+        followers.setContent(followerList);
+
+        return Response.ok(followers).build();
+    }
+
+
 }
