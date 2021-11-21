@@ -60,10 +60,11 @@ public class PostResource {
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
         if (followerId == null) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity("You fogot the header")
+                    .entity("You forgot the header followerId")
                     .build();
         }
 
