@@ -17,3 +17,19 @@ O Quarkus vem com um modo de desenvolvimento integrado. Execute seu aplicativo c
 ``` 
 ./mvnw compile quarkus:dev
 ```
+
+Comando para adicionar a extenção do Quarkus-Swagger
+```
+./mvnw quarkus:add-extension -Dextensions="quarkus-smallrye-openapi"
+```
+
+Empacotando a aplicação para produção
+
+```
+./mvnw clean package -DskipTests //Gera jar sem rodar os testes
+```
+
+```
+java -jar .\target\quarkus-app\quarkus-run.jar
+
+```
