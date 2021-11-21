@@ -31,5 +31,5 @@ Empacotando a aplicação para produção
 
 ```
 java -jar .\target\quarkus-app\quarkus-run.jar
-
 ```
+
